@@ -2,21 +2,12 @@
 
 angular.module('workspaceApp')
   .controller('MainCtrl', function ($scope, $http) {
-    $scope.awesomeThings = [];
-
-    $http.get('/api/things').success(function(awesomeThings) {
-      $scope.awesomeThings = awesomeThings;
-    });
-
-    $scope.addThing = function() {
-      if($scope.newThing === '') {
-        return;
+    $scope.city = '';
+    $scope.findBars = function(city){
+      if(city){
+        $http.post('/api/bars/search/'+city, { location: city, category_filter: "bars" }).success(function(results){
+          console.log(results);
+        });
       }
-      $http.post('/api/things', { name: $scope.newThing });
-      $scope.newThing = '';
-    };
-
-    $scope.deleteThing = function(thing) {
-      $http.delete('/api/things/' + thing._id);
     };
   });
