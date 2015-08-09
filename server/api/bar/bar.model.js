@@ -8,7 +8,7 @@ var BarSchema = new Schema({
   info: String,
   active: Boolean,
   yelpID: String,
-  city: String,
+  location: Object,
   patrons: [{name: String, userID: String}]
 });
 

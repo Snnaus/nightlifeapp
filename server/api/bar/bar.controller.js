@@ -55,11 +55,21 @@ exports.destroy = function(req, res) {
   });
 };
 
+// takes parameters to use with the yelp api and returns yelps response
 exports.yelpQuery = function(req, res){
   yelp.request_yelp(req.body, function(error, response, body){
     if(error){ return handleError(res, error); }
     if(!body){ return res.status(404).send('Not Found'); }
     return res.status(200).json(body);
+  });
+};
+
+// takes a mongo query and then returns the bars that match that query
+exports.checkForBars = function(req, res){
+  Bar.find(req.body, function(err, bars){
+    if(err){ return handleError(res, err) }
+    if(!bars){ return res.status(404).send('Not Found') }
+    return res.status(200).json(bars);
   });
 };
 

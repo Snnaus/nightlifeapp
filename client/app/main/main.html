@@ -1,8 +1,17 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-
 <form ng-submit='findBars(city)'>
   <div class='form-group'>
     <input type=text placeholder='Search City' ng-model='city'>
     <button class='btn btn-default'>Find Bars</button>
   </div>
 </form>
+
+<!--<h5>{{activeBars}}</h5>-->
+
+<div class='container'>
+  <div class='row'>
+    <ul id='searchResults' ng-show='searched'>
+      <li ng-repeat='bar in activeBars'>{{bar.name}} &nbsp&nbsp {{bar.patrons.length}}</li>
+    </ul>
+  </div>
+</div>

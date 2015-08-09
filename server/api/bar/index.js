@@ -12,5 +12,6 @@ router.put('/:id', controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 router.post('/search/:search', controller.yelpQuery);
+router.post('/check', controller.checkForBars);
 
 module.exports = router;

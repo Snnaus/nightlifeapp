@@ -19,7 +19,8 @@ exports.request_yelp = function(set_parameters, callback){
   /* We can setup default parameters here */
   var default_parameters = {
     location: 'San+Francisco',
-    sort: '2'
+    sort: '2',
+    limit: 20
   };
 
   /* We set the require parameters here */
