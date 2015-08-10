@@ -1,17 +1,21 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-<form ng-submit='findBars(city)'>
-  <div class='form-group'>
-    <input type=text placeholder='Search City' ng-model='city'>
-    <button class='btn btn-default'>Find Bars</button>
-  </div>
-</form>
 
-<!--<h5>{{activeBars}}</h5>-->
+<button class='btn btn-primary' ng-click='openModal()'>Open the modal</button>
 
 <div class='container'>
-  <div class='row'>
-    <ul id='searchResults' ng-show='searched'>
-      <li ng-repeat='bar in activeBars'>{{bar.name}} &nbsp&nbsp {{bar.patrons.length}}</li>
-    </ul>
+  <div class='col-lg-3 col-md-3 col-sm-3 hidden-xs'></div>
+  <div class='col-lg-6 col-md-6 col-sm-6 col-xs-12'>
+    <form ng-submit='findBars(city)'>
+      <div class='form-group'>
+        <input type=text placeholder='Search City' ng-model='city'>
+        <button class='btn btn-default'>Find Bars</button>
+      </div>
+    </form>
+    <div class='row searchResult'ng-repeat='bar in activeBars'>
+      <button class='btn btn-info'>Join the life</button>
+      <span class='barName'>{{bar.name}}</span>
+      <span class='alignLeft'>{{bar.patrons.length}}</span>
+    </div>
+  </div>
   </div>
 </div>

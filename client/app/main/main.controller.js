@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workspaceApp')
-  .controller('MainCtrl', function ($scope, $http) {
+  .controller('MainCtrl', function ($scope, $http, $modal) {
     $scope.city = '';
     $scope.activeBars = [];
     $scope.searched = false;
@@ -37,5 +37,14 @@ angular.module('workspaceApp')
         
         
       }
+    };
+    
+    $scope.openModal = function(){
+      var modalInstance = $modal.open({
+        animation: $scope.animationsEnabled,
+        templateUrl: 'app/account/login/modalLogin.html',
+        controller: 'LoginCtrl',
+        size: 'lg'
+      });
     };
   });
