@@ -1,7 +1,11 @@
 'use strict';
 
 angular.module('workspaceApp')
-  .controller('MainCtrl', function ($scope, $http, $modal) {
+  .controller('MainCtrl', function ($scope, $http, $modal, Auth) {
+    $scope.isLoggedIn = Auth.isLoggedIn();
+    $scope.isAdmin = Auth.isAdmin();
+    $scope.getCurrentUser = Auth.getCurrentUser();
+    
     $scope.city = '';
     $scope.activeBars = [];
     $scope.searched = false;
@@ -13,38 +17,65 @@ angular.module('workspaceApp')
           rawBars = JSON.parse(results);
         }).then(function(){
           $http.post('/api/bars/check', { "location.city" : city }).success(function(bars){
-          bars.forEach(function(bar){
-            activeBars[bar.yelpID] = bar;
-          });}).then(function(){
-            actBars = rawBars.businesses.map(function(bar){
-            if(activeBars === {}){
-              if(activeBars.keys.indexOf(bar.id) !== -1){
-                return activeBars[bar.id];
-              }
-            } else{
-              return {
-                name: bar.name,
-                yelpID: bar.yelpID,
-                location: bar.location,
-                patrons: []
-              };
-            }
-        });
-            $scope.activeBars = actBars;
-            $scope.searched = true;
-        });
+            bars.forEach(function(bar){
+              activeBars[bar.yelpID] = bar;
+            });}).then(function(){
+              actBars = rawBars.businesses.map(function(bar){
+                if(Object.keys(activeBars).indexOf(bar.id) !== -1){
+                  return activeBars[bar.id];
+                } else{
+                  return {
+                    name: bar.name,
+                    yelpID: bar.id,
+                    location: bar.location,
+                    patrons: []
+                  };
+                }
+            });
+              $scope.activeBars = actBars;
+              $scope.searched = true;
+          });
         });
         
         
       }
     };
     
-    $scope.openModal = function(){
+    var openModal = function(){
       var modalInstance = $modal.open({
         animation: $scope.animationsEnabled,
         templateUrl: 'app/account/login/modalLogin.html',
         controller: 'LoginCtrl',
         size: 'lg'
       });
+      
+      modalInstance.result.then(function(){
+        $scope.isLoggedIn = Auth.isLoggedIn();
+        $scope.isAdmin = Auth.isAdmin();
+        $scope.getCurrentUser = Auth.getCurrentUser();
+      });
     };
-  });
+    
+    $scope.joinBar = function(bar, user){
+      if(!$scope.isLoggedIn){
+        openModal();
+      } else{
+        console.log(user);
+        user.bars.push(bar.yelpID);
+        $http.post('api/users/update/'+user._id, { bars: user.bars });
+        if(bar.patrons.length){
+          bar.patrons.push({
+            name: user.name,
+            userID: user._id
+          });
+          $http.patch('api/bars/'+bar._id, { patrons: bar.patrons });
+        }else{
+          bar.patrons.push({
+            name: user.name,
+            userID: user._id
+          });
+          $http.post('api/bars/', bar);
+      }
+    };
+  };
+});

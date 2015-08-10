@@ -14,8 +14,7 @@ angular.module('workspaceApp')
           password: $scope.user.password
         })
         .then( function() {
-          // Logged in, redirect to home
-          $location.path('/');
+          $modalInstance.close();
         })
         .catch( function(err) {
           $scope.errors.other = err.message;
