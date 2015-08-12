@@ -57,10 +57,9 @@ angular.module('workspaceApp')
     };
     
     $scope.joinBar = function(bar, user){
-      if(!$scope.isLoggedIn){
+      if(!user._id){
         openModal();
       } else{
-        console.log(user);
         user.bars.push(bar.yelpID);
         $http.post('api/users/update/'+user._id, { bars: user.bars });
         if(bar.patrons.length){
@@ -78,4 +77,30 @@ angular.module('workspaceApp')
       }
     };
   };
+  
+    $scope.leaveBar = function(bar, user){
+      var index = bar.patrons.map(function(patron){
+        return patron.userID;
+      }).indexOf(user._id);
+      var garbage = bar.patrons.splice(index, 1);
+      var userIndex = user.bars.indexOf(bar.yelpID);
+      garbage = user.bars.splice(userIndex, 1);
+      $http.post('/api/users/update/'+user._id, { bars: user.bars });
+      if(bar.patrons.length){
+        $http.put('/api/bars/'+bar._id, { patrons: bar.patrons });
+      }else{
+        $http.delete('/api/bars/'+bar._id);
+      }
+    };
+    
+    $scope.checkGo = function(bar, user){
+      if(!user){
+        return true;
+      } else{
+        var check = bar.patrons.map(function(pat){
+          return pat.userID;
+        }).indexOf(user._id);
+        return check === -1;
+      }
+    };
 });
