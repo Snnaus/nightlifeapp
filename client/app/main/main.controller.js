@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workspaceApp')
-  .controller('MainCtrl', function ($scope, $http, $modal, Auth) {
+  .controller('MainCtrl', function ($scope, $http, $modal, Auth, $interval) {
     $scope.isLoggedIn = Auth.isLoggedIn();
     $scope.isAdmin = Auth.isAdmin();
     $scope.getCurrentUser = Auth.getCurrentUser();
@@ -106,4 +106,15 @@ angular.module('workspaceApp')
         return check === -1;
       }
     };
+    
+    var checkLogin = function(){
+      $scope.isLoggedIn = Auth.isLoggedIn();
+      $scope.isAdmin = Auth.isAdmin();
+      $scope.getCurrentUser = Auth.getCurrentUser();
+    };
+    
+    var timer = $interval(checkLogin, 250);
+    $scope.$on('$destroy', function(){
+      $interval.cancel(timer);
+    });
 });
