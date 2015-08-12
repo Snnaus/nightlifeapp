@@ -56,7 +56,7 @@ angular.module('workspaceApp')
       });
     };
     
-    $scope.joinBar = function(bar, user){
+    $scope.joinBar = function(bar, user, actBars){
       if(!user._id){
         openModal();
       } else{
@@ -73,7 +73,9 @@ angular.module('workspaceApp')
             name: user.name,
             userID: user._id
           });
-          $http.post('api/bars/', bar);
+          $http.post('api/bars/', bar).success(function(newBar){
+            actBars[actBars.map(function(bar){ return bar.yelpID }).indexOf(newBar.yelpID)] = newBar;
+          });
       }
     };
   };
@@ -89,6 +91,7 @@ angular.module('workspaceApp')
       if(bar.patrons.length){
         $http.put('/api/bars/'+bar._id, { patrons: bar.patrons });
       }else{
+        console.log(bar);
         $http.delete('/api/bars/'+bar._id);
       }
     };

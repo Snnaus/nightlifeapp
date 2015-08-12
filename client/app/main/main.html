@@ -10,7 +10,7 @@
       </div>
     </form>
     <div class='row searchResult' ng-repeat='bar in activeBars track by $index'>
-      <button class='btn btn-info' ng-click='joinBar(bar, getCurrentUser)' ng-show='checkGo(bar, getCurrentUser)'>Join the life</button>
+      <button class='btn btn-info' ng-click='joinBar(bar, getCurrentUser, activeBars)' ng-show='checkGo(bar, getCurrentUser)'>Join the life</button>
       <button class='btn btn-danger' ng-click='leaveBar(bar, getCurrentUser)' ng-hide='checkGo(bar, getCurrentUser)'>Leave the life</button>
       <span class='barName'>{{bar.name}}</span>
       <span class='alignLeft'>{{bar.patrons.length}}</span>
