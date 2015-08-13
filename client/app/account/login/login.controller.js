@@ -26,5 +26,7 @@ angular.module('workspaceApp')
       $window.location.href = '/auth/' + provider;
     };
     
-    
+    $scope.closeModal= function(){
+      $modalInstance.close();
+    };
   });
