@@ -6,6 +6,7 @@ angular.module('workspaceApp')
     $scope.isAdmin = Auth.isAdmin();
     $scope.getCurrentUser = Auth.getCurrentUser();
     
+    
     $scope.city = '';
     $scope.activeBars = [];
     $scope.searched = false;
@@ -16,7 +17,8 @@ angular.module('workspaceApp')
         $http.post('/api/bars/search/'+city, { location: city, category_filter: "bars" }).success(function(results){
           rawBars = JSON.parse(results);
         }).then(function(){
-          $http.post('/api/bars/check', { "location.city" : city }).success(function(bars){
+          $http.get('/api/bars').success(function(bars){
+            bars = bars.filter(function(bar){ return rawBars.businesses.map(function(bar){return bar.id}).indexOf(bar.yelpID) !== -1});
             bars.forEach(function(bar){
               activeBars[bar.yelpID] = bar;
             });}).then(function(){
@@ -62,19 +64,19 @@ angular.module('workspaceApp')
       } else{
         user.bars.push(bar.yelpID);
         $http.post('api/users/update/'+user._id, { bars: user.bars });
-        if(bar.patrons.length){
+        if(bar.patrons.length > 0){
           bar.patrons.push({
             name: user.name,
             userID: user._id
           });
-          $http.patch('api/bars/'+bar._id, { patrons: bar.patrons });
+          $http.put('api/bars/'+bar._id, { patrons: bar.patrons });
         }else{
           bar.patrons.push({
             name: user.name,
             userID: user._id
           });
           $http.post('api/bars/', bar).success(function(newBar){
-            actBars[actBars.map(function(bar){ return bar.yelpID }).indexOf(newBar.yelpID)] = newBar;
+            actBars[actBars.map(function(neobar){ return neobar.yelpID }).indexOf(newBar.yelpID)] = newBar;
           });
       }
     };
@@ -91,7 +93,7 @@ angular.module('workspaceApp')
       if(bar.patrons.length){
         $http.put('/api/bars/'+bar._id, { patrons: bar.patrons });
       }else{
-        console.log(bar);
+        //console.log(bar);
         $http.delete('/api/bars/'+bar._id);
       }
     };
